@@ -1,4 +1,5 @@
 import 'package:covid_app/Services/statws_services.dart';
+import 'package:covid_app/detailed_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:shimmer/shimmer.dart';
 
@@ -44,43 +45,52 @@ class _CountriesListState extends State<CountriesList> {
                         return ListView.builder(
                             itemCount: snapshot.data!.length,
                             itemBuilder: (context, index) {
-                              return ListTile(
-                                title: Text(snapshot.data![index]['country']),
-                                subtitle: Text(
-                                    snapshot.data![index]['cases'].toString()),
-                                leading: Image(
-                                  height: 50,
-                                  width: 70,
-                                  fit: BoxFit.cover,
-                                  image: NetworkImage(snapshot.data![index]
-                                      ['countryInfo']['flag']),
+                              return InkWell(
+                                onTap: () {
+                                  print('IS CLICKED////////////');
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) => DetailedScreen(
+                                                image: snapshot.data![index]
+                                                    ['countryInfo']['flag'],
+                                                name: snapshot.data![index]
+                                                    ['country'],
+                                                totalRecovered: snapshot
+                                                    .data![index]['recovered'],
+                                                totalDeaths: snapshot
+                                                    .data![index]['deaths'],
+                                                todayRecovered:
+                                                    snapshot.data![index]
+                                                        ['todayRecovered'],
+                                                critical: snapshot.data![index]
+                                                    ['critical'],
+                                                totalCases: snapshot
+                                                    .data![index]['cases'],
+                                              )));
+                                },
+                                child: ListTile(
+                                  title: Text(snapshot.data![index]['country']),
+                                  subtitle: Text(snapshot.data![index]['cases']
+                                      .toString()),
+                                  leading: Image(
+                                    height: 50,
+                                    width: 70,
+                                    fit: BoxFit.cover,
+                                    image: NetworkImage(snapshot.data![index]
+                                        ['countryInfo']['flag']),
+                                  ),
                                 ),
                               );
-                            });
-                      } else {
-                        return Shimmer.fromColors(
-                            baseColor: Colors.grey.shade700,
-                            highlightColor: Colors.grey.shade100,
-                            child: Column(
-                              children: [
-                                ListView.builder(
-                                    itemCount: 4,
-                                    itemBuilder: (context, index) {
-                                      return ListTile(
-                                        title: Container(width: 80,height: 16,color: Colors.white,),
-                                        subtitle: Container(width: 80,height: 16,color: Colors.white,),
-                                        leading: Container(height: 50,width: 50,color: Colors.white,),
-                                      );
-                                    })
-                              ],
-                            ));
+                            }
+                            );
+                      }else{
+                        return Center(child: Text('None'),);
                       }
-                    }
-                    )),
+                    })),
           ],
         ),
       ),
-
     );
   }
 }
